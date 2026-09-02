@@ -11,6 +11,16 @@ async function loadPreviewData() {
     const isPreview = params.get('preview');
     
     try {
+<<<<<<< HEAD
+        if (packageId && /^[a-f0-9]{24}$/.test(packageId)) {
+            const response = await fetch(`/api/packages/${encodeURIComponent(packageId)}`, {
+                cache: 'no-store'
+            });
+            if (response.ok) {
+                previewData = await response.json();
+            } else {
+                throw new Error(`Package service returned ${response.status}`);
+=======
         if (packageId) {
             if (/^[a-z0-9-]{8,120}$/i.test(packageId)) {
                 const response = await fetch(`/api/packages/${encodeURIComponent(packageId)}`);
@@ -24,10 +34,9 @@ async function loadPreviewData() {
                 if (data) {
                     previewData = JSON.parse(data);
                 }
+>>>>>>> upstream/main
             }
-        }
-        
-        if (!previewData && isPreview) {
+        } else if (!packageId && isPreview) {
             const data = localStorage.getItem('carePackage');
             if (data) {
                 previewData = JSON.parse(data);
@@ -50,7 +59,7 @@ async function loadPreviewData() {
         console.warn('Could not load creator name:', e);
     }
     
-    if (!previewData) {
+    if (!previewData && !packageId) {
         // Demo data
         previewData = {
             to: 'cutie',
@@ -60,6 +69,12 @@ async function loadPreviewData() {
                 { type: 'drawing', src: createDemoDrawing(), description: 'hand drawing', id: 2 }
             ]
         };
+    }
+
+    if (!previewData) {
+        document.getElementById('boxTo').textContent = 'package unavailable';
+        document.getElementById('boxFrom').textContent = 'please try again later';
+        return;
     }
     
     // Update box label
