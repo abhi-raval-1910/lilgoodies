@@ -24,7 +24,8 @@ async function supabaseRequest(path, options = {}) {
         throw new Error(`Supabase request failed: ${response.status} ${message}`);
     }
 
-    return response.status === 204 ? null : response.json();
+    const body = await response.text();
+    return body ? JSON.parse(body) : null;
 }
 
 module.exports = { supabaseRequest };
