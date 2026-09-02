@@ -919,7 +919,14 @@ async function generatePackageLink(status = 'paid', couponCode = '', payment = n
             throw new Error(result.error || `Package service returned ${response.status}`);
         }
         const remotePackage = await response.json();
-        const previewUrl = new URL(remotePackage.shareUrl || remotePackage.url, window.location.href);
+        const previewUrl = new URL('preview.html', window.location.href);
+        if (remotePackage.shareId) {
+            previewUrl.searchParams.set('id', remotePackage.shareId);
+        } else if (remotePackage.url) {
+            previewUrl.href = new URL(remotePackage.url, window.location.href).href;
+        } else {
+            throw new Error('Package service returned no share link');
+        }
         document.getElementById('generatedLink').value = previewUrl.href;
         openModalById('linkModal');
         updateFlowSteps(4);
