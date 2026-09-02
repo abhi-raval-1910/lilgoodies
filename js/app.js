@@ -914,11 +914,16 @@ async function generatePackageLink(status = 'paid', couponCode = '', payment = n
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...packageData, status, couponCode, payment })
         });
-        if (!response.ok) {
-            const result = await response.json().catch(() => ({}));
-            throw new Error(result.error || `Package service returned ${response.status}`);
+        const responseText = await response.text();
+        let remotePackage = {};
+        try {
+            remotePackage = responseText ? JSON.parse(responseText) : {};
+        } catch {
+            throw new Error(`Package service returned invalid JSON (${response.status})`);
         }
-        const remotePackage = await response.json();
+        if (!response.ok) {
+            throw new Error(remotePackage.error || `Package service returned ${response.status}`);
+        }
         const previewUrl = new URL('preview.html', window.location.href);
         if (remotePackage.shareId) {
             previewUrl.searchParams.set('id', remotePackage.shareId);
