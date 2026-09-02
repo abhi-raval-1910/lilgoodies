@@ -925,39 +925,8 @@ async function generatePackageLink(status = 'paid', couponCode = '', payment = n
         updateFlowSteps(4);
         return;
     } catch (error) {
-<<<<<<< HEAD
         console.error('Could not store package in Supabase:', error);
         showToast('Could not create the shared link. Check the live API setup and try again.');
-=======
-        console.warn('Remote package storage unavailable; using local preview:', error);
-        if (!isLocalDevelopment()) {
-            showToast('Could not save package. Please check database setup and try again.');
-            return;
-        }
-        showToast('Package service unavailable; creating a local preview link for local testing.');
-    }
-
-    try {
-        const packageId = generatePackageId();
-        localStorage.setItem(packageId, JSON.stringify(packageData));
-        const previewUrl = new URL('preview.html', window.location.href);
-        previewUrl.searchParams.set('id', packageId);
-        document.getElementById('generatedLink').value = previewUrl.href;
-        openModalById('linkModal');
-    } catch (e) {
-        console.warn('Storage full, using fallback package key');
-        const fallbackId = 'carePackage';
-        localStorage.setItem(fallbackId, JSON.stringify(packageData));
-        const previewUrl = new URL('preview.html', window.location.href);
-        previewUrl.searchParams.set('id', fallbackId);
-        document.getElementById('generatedLink').value = previewUrl.href;
-        openModalById('linkModal');
->>>>>>> upstream/main
-    }
-
-    function isLocalDevelopment() {
-        const hostname = window.location.hostname;
-        return window.location.protocol === 'file:' || hostname === 'localhost' || hostname === '127.0.0.1';
     }
 }
 

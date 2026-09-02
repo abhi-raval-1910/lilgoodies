@@ -11,8 +11,7 @@ async function loadPreviewData() {
     const isPreview = params.get('preview');
     
     try {
-<<<<<<< HEAD
-        if (packageId && /^[a-f0-9]{24}$/.test(packageId)) {
+        if (packageId && /^[a-z0-9-]{8,120}$/i.test(packageId)) {
             const response = await fetch(`/api/packages/${encodeURIComponent(packageId)}`, {
                 cache: 'no-store'
             });
@@ -20,21 +19,6 @@ async function loadPreviewData() {
                 previewData = await response.json();
             } else {
                 throw new Error(`Package service returned ${response.status}`);
-=======
-        if (packageId) {
-            if (/^[a-z0-9-]{8,120}$/i.test(packageId)) {
-                const response = await fetch(`/api/packages/${encodeURIComponent(packageId)}`);
-                if (response.ok) {
-                    previewData = await response.json();
-                }
-            }
-
-            if (!previewData) {
-                const data = localStorage.getItem(packageId);
-                if (data) {
-                    previewData = JSON.parse(data);
-                }
->>>>>>> upstream/main
             }
         } else if (!packageId && isPreview) {
             const data = localStorage.getItem('carePackage');
