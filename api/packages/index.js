@@ -74,6 +74,6 @@ module.exports = async function handler(request, response) {
         return response.status(201).json({ id, shareId: shareSlug, url: sharePath });
     } catch (error) {
         console.error(error);
-        return response.status(500).json({ error: 'Could not create package' });
+        return response.status(500).json({ error: `Could not create package: ${error.message}` });
     }
 };
